@@ -61,3 +61,15 @@ class ViewTests(APITestCase):
         })
         self.assertEquals(0, len(response.data))
         self.assertJSONEqual(response.content, [])
+
+    def test_search_can_be_paginated(self):
+        response = self.client.get('/api/v1/catalog/wines/', {
+            'limit': 1,
+            'offset': 1,
+        })
+        # Count is equal to total number of results in database
+        # We're loading 3 wines into the database via fixtures
+        self.assertEqual(3, response.data['count'])
+        self.assertEqual(1, len(response.data['results']))
+        self.assertIsNotNone(response.data['previous'])
+        self.assertIsNotNone(response.data['next'])
