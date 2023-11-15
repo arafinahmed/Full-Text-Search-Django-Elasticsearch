@@ -15,6 +15,7 @@ media/
 # Django static files
 /staticfiles/
 /static/
+static
 
 # Log files
 *.log
