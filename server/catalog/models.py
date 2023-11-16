@@ -9,7 +9,7 @@ from django.db.models import F
 
 class WineQuerySet(models.query.QuerySet):
     def search(self, query):
-        search_query = SearchQuery(query)
+        search_query = SearchQuery(query, search_type='plain')
         return self.annotate(
             variety_headline=SearchHeadline(
                 expression=F('variety'),
