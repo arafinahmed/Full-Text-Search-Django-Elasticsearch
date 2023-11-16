@@ -1,7 +1,13 @@
 import uuid
 
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchHeadline, SearchQuery, SearchRank, SearchVectorField
+from django.contrib.postgres.search import (
+    SearchHeadline,
+    SearchQuery,
+    SearchRank,
+    SearchVectorField,
+    TrigramSimilarity,
+)
 from django.db import models
 from django.db.models import F
 
@@ -60,3 +66,15 @@ class Wine(models.Model):
 
     def __str__(self):
         return f'{self.id}'
+
+class WineSearchWordQuerySet(models.query.QuerySet):
+    def search(self, query):
+        return self.annotate(
+            similarity=TrigramSimilarity('word', query)
+        ).filter(similarity__gte=0.3).order_by('-similarity')    
+
+class WineSearchWord(models.Model):
+    word = models.CharField(max_length=255, unique=True)
+    objects = WineSearchWordQuerySet.as_manager()
+    def __str__(self) -> str:
+        return self.word

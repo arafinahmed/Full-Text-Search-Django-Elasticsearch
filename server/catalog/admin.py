@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Wine
+from .models import Wine, WineSearchWord
 
 
 @admin.register(Wine)
@@ -11,3 +11,9 @@ class WineAdmin(admin.ModelAdmin):
     list_filter = ('country', 'variety', 'winery',)
     ordering = ('variety',)
     readonly_fields = ('id',)
+
+@admin.register(WineSearchWord)
+class WineSearchWordAdmin(admin.ModelAdmin):
+    fields = ('word',)
+    list_display = ('word',)
+    ordering = ('word',)
